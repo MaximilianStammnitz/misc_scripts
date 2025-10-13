@@ -1,1 +1,1 @@
-Various files for DMS data processing.
+Some scripts for DMS data processing.
