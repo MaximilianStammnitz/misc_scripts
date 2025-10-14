@@ -1,5 +1,5 @@
 ## Standardised data preparation of Tite-MoCHI runs
-## 13.10.2025
+## Last update: 14.10.2025
 ## maximilian.stammnitz@crg.eu
 
 ## 0. Environment ##
@@ -46,15 +46,11 @@ names(input.data) <- dosages
 ## 2. Re-scale fitness to -1 (stops) and 0 (WT/syn) ##
 ######################################################
 
-## Calculate the error-weighted mean of stops and WTs
-input.data <- lapply(input.data, function(x){x$fitness_over_sigmasquared <- x$fitness/(x$sigma)**2; return(x)})
-input.data <- lapply(input.data, function(x){x$fitness_one_over_sigmasquared <- 1/(x$sigma)**2; return(x)})
-
 ## STOPs
-input.stops <- lapply(input.data, function(x){x <- x[which(x[,"STOP"] == T),,drop = F]; x <- sum(x$fitness_over_sigmasquared, na.rm = TRUE) / sum(x$fitness_one_over_sigmasquared, na.rm = TRUE); return(x)})
+input.stops <- lapply(input.data, function(x){x <- x[which(x[,"STOP"] == T),,drop = F]; x <- median(x$fitness); return(x)})
 
 ## WTs/synonymous
-input.WTs <- lapply(input.data, function(x){x <- x[which(x$Nham_aa == 0),,drop = F]; x <- sum(x$fitness_over_sigmasquared, na.rm = TRUE)/sum(x$fitness_one_over_sigmasquared, na.rm = TRUE); return(x)})
+input.WTs <- lapply(input.data, function(x){x <- x[which(x$Nham_aa == 0),,drop = F]; x <- median(x$fitness); return(x)})
 
 ## Calculate coefficients for re-scaling to -1 / 0
 scaling_data <- cbind(data.frame(rbind(do.call(c, input.stops), do.call(c, input.WTs))))
@@ -183,11 +179,12 @@ for(i in 1:length(input.data.tMoCHI)){
 ## Only export the key columns of interest
 input.data.ddMoCHI <- lapply(input.data, function(x){x <- x[,match(key.columns, colnames(x))]; colnames(x)[4:5] <- c("fitness", "sigma"); return(x)})
 
-## Choose one of the wildtypes (here: highest concentration)
-WT.max <- input.data.ddMoCHI[[1]][which(input.data.ddMoCHI[[1]]$WT == T),,drop = F]
+## Choose one of the wildtypes and its synonymous mutations (here: highest concentration)
+WT.max <- input.data.ddMoCHI[[1]][which(input.data.ddMoCHI[[1]]$Nham_aa == 0),,drop = F]
+input.data.ddMoCHI[[1]] <- input.data.ddMoCHI[[1]][-which(input.data.ddMoCHI[[1]]$Nham_aa == 0),,drop = F]
 
-## Remove all main WT variants
-input.data.ddMoCHI <- lapply(input.data.ddMoCHI, function(x){x <- x[-which(x$WT == T),]; return(x)})
+## Remove all remainder concentration's main WT variants
+input.data.ddMoCHI[2:length(input.data.ddMoCHI)] <- lapply(input.data.ddMoCHI[2:length(input.data.ddMoCHI)], function(x){x <- x[-which(x$WT == T),]; return(x)})
 
 ## Encode each concentration as a mutation (should work until 19 concentrations)
 alphabet <- c("G", "A", "V", "L", "M", "I", "F", 
