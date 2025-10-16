@@ -16,7 +16,7 @@ library(scales)
 library(Biostrings)
 
 ## paths
-setwd("/Users/mstammnitz/Library/CloudStorage/OneDrive-CRG-CentredeRegulacioGenomica/Desktop/DeepDrug/2_mature_projects/GID1A-GAI-gibberelic_acid/2_full-length_GID1A_SUNi_library/2025-06_13_dmscore_bPCA/")
+setwd("")
 
 ## define input folder
 input <- "" ## adjust
