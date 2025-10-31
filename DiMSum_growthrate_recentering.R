@@ -179,5 +179,10 @@ dev.off()
 # attached base packages:
 # [1] stats     graphics  grDevices utils     datasets  methods   base     
 # 
+# other attached packages:
+# [1] viridis_0.6.5     viridisLite_0.4.2
+# 
 # loaded via a namespace (and not attached):
-# [1] compiler_4.5.1 tools_4.5.1
+# [1] RColorBrewer_1.1-3 R6_2.6.1           tidyselect_1.2.1   farver_2.1.2       magrittr_2.0.4     gtable_0.3.6       glue_1.8.0         gridExtra_2.3      tibble_3.3.0       pkgconfig_2.0.3   
+# [11] dplyr_1.1.4        generics_0.1.4     lifecycle_1.0.4    ggplot2_4.0.0      cli_3.6.5          S7_0.2.0           scales_1.4.0       grid_4.5.1         vctrs_0.6.5        compiler_4.5.1    
+# [21] tools_4.5.1        pillar_1.11.1      rlang_1.1.6   
