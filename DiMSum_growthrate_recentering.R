@@ -9,6 +9,15 @@
 ## 0. Environment ##
 ####################
 
+## Libraries
+packages <- c("viridis")
+
+## Install missing packages
+install_if_missing <- function(pkg) {if (!requireNamespace(pkg, quietly = TRUE)) install.packages(pkg)}
+lapply(packages, install_if_missing)
+
+## Load libraries
+lapply(packages, library, character.only = TRUE)
 
 ## Paths
 setwd("") ## set your directory above the DiMSum folders
@@ -83,8 +92,70 @@ rm(i, tmp.lm)
 ## 3. Visualise growth rates before vs. after normalisation ##
 ##############################################################
 
+pdf("growth_rates_rescaled.pdf", height = 10, width = 25)
 
+par(mfcol = c(1,2))
+conc <- length(sPCA_data)
 
+### original fitness
+set.max <- c()
+for (i in 1:conc){
+  set.max <- c(set.max, max(density(sPCA_data[[i]]$growthrate)$y))
+}
+set.max <- max(set.max)
+
+plot(density(sPCA_data[[1]]$growthrate), 
+     bty = "n", 
+     col = viridis(n = conc, alpha = 0.5)[1],
+     lwd = 3,
+     main = "", 
+     cex.main = 3, 
+     cex.axis = 1.8,
+     cex.lab = 2.5, 
+     xlab = "Growth rate (raw)", 
+     xlim = c(-0.1, 0.5),
+     ylim = c(0, set.max))
+
+for(i in 2:conc){
+  lines(density(sPCA_data[[i]]$growthrate), 
+        col = viridis(n = conc, alpha = 0.5)[i],
+        lwd = 3)
+}
+
+### legend
+legend('topleft',
+       legend = 1:conc,
+       col = viridis(n = conc, alpha = 0.9),
+       lwd = 3,
+       cex = 1.5,
+       bty = "n")
+
+### fitness re-scaled
+set.max <- c()
+for (i in 1:conc){
+  set.max <- c(set.max, max(density(sPCA_data[[i]]$gr_normalised)$y))
+}
+set.max <- max(set.max)
+
+plot(density(sPCA_data[[1]]$gr_normalised), 
+     bty = "n", 
+     col = viridis(n = conc, alpha = 0.5)[1],
+     lwd = 3,
+     main = "", 
+     cex.main = 3, 
+     cex.axis = 1.8,
+     cex.lab = 2.5, 
+     xlab = "Growth rate (re-scaled)", 
+     xlim = c(-0.1, 0.5),
+     ylim = c(0, set.max))
+
+for(i in 2:conc){
+  lines(density(sPCA_data[[i]]$gr_normalised), 
+        col = viridis(n = conc, alpha = 0.5)[i],
+        lwd = 3)
+}
+
+dev.off()
 
 
 ## 4. Version ##
