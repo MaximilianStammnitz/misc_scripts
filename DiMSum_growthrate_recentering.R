@@ -28,7 +28,7 @@ setwd("") ## set your directory above the DiMSum folders
 
 ## Input function
 load_conc <- function(conc){
-  load(paste0("conc", conc, "/conc_", conc, "_fitness_replicates.RData")) ## may need to adjust this path encoding to get load your files  
+  load(paste0("conc", conc, "/conc_", conc, "_fitness_replicates.RData")) ## may need to adjust this path encoding to correctly load your files  
   data <- rbind(all_variants, synonymous)
   data <- data[-which(data$WT == T)[-1],] ## remove duplicated WT
   return(data)}
